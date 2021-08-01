@@ -50,8 +50,8 @@ namespace NaflimHelperLibrary
 
                 using (FileStream fileStream = new FileStream(path, fileMode, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    byte[] by = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
-
+                    //byte[] by = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
+                    byte[] by = System.Text.Encoding.Default.GetBytes(msg + "\r\n");
                     fileStream.Write(by, 0, by.Length);
                 }
             }
