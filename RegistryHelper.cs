@@ -16,6 +16,7 @@ namespace NaflimHelperLibrary
         {
             application = app;
         }
+
         /// <summary>
         /// 注册表获取数据
         /// </summary>
@@ -84,6 +85,7 @@ namespace NaflimHelperLibrary
             RegistryKey hkSoftWare = hkcu.CreateSubKey(@"SOFTWARE\NaflimPreject\" + application);
             hkSoftWare.Close();
         }
+
         /// <summary>
         /// 设置注册表键值
         /// </summary>
@@ -96,6 +98,7 @@ namespace NaflimHelperLibrary
 
             hkSoftWare.Close();
         }
+
         /// <summary>
         /// 关闭注册表链接
         /// </summary>
