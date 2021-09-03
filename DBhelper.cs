@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -77,20 +77,24 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
-        /// 对数据库增删改
+        /// 读取数据库
         /// </summary>
         /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">SQL语句参数</param>
         /// <returns></returns>
-        public bool GetExecuteNonQuery(string sql)
+        public DataTable GetData(string sql, params SqlParameter[] parameters)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(conStr))
                 {
-                    if (connection.State == ConnectionState.Closed)
-                        connection.Open();
-                    MySqlCommand command = new MySqlCommand(sql, connection);
-                    return command.ExecuteNonQuery() > 0;
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(sql, conStr);
+                    if (parameters != null)
+                        adapter.SelectCommand.Parameters.AddRange(parameters);
+                    DataTable data = new DataTable();
+                    adapter.Fill(data);
+                    adapter.Dispose();
+                    return data;
                 }
             }
             catch (Exception ex)
