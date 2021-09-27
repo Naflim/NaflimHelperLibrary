@@ -1,149 +1,197 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Office.Interop.Excel;
 
 namespace NaflimHelperLibrary
 {
-    public static class Log
+    public class Log
     {
-        private static readonly string DirectoryPath = System.AppDomain.CurrentDomain.BaseDirectory + "/日志";
-        /// <summary>
-        /// 日志路径
-        /// </summary>
-       // private static string path = Path.Combine(DirectoryPath, string.Format("{0}.txt",DateTime.Now.ToString("yyyyMMdd")));
+        public string log { get; set; }
+        public string input { get; set; }
+        public string output { get; set; }
 
-        /// <summary>
-        /// 记录已创建日志行数
-        /// </summary>
-        private static int LogLine = 0;
+        string head;
+        string foot;
+        bool cusHead = false;
+        bool cusFoot = false;
 
-        /// <summary>
-        /// 线程锁对象
-        /// </summary>
-        public static object obj = new object();
-
-        /// <summary>
-        /// 是否创建文本
-        /// </summary>
-        private static bool isCreateText = true;
-
-        /// <summary>
-        /// 保留日志行数
-        /// </summary>
-        private const int RETAIN_LINE = 500;
-
-        static Log()
+        public Log()
         {
+
         }
 
-
-        private static void WriteLog(string msg, FileMode fileMode,string path)
+        public Log(string log)
         {
-            try
+            this.log = log + "\r\n";
+        }
+
+        public Log(string input, string output)
+        {
+            this.input = input;
+            this.output = output;
+        }
+        void LordLog()
+        {
+            log = (cusHead ? $"{head}\r\n" : $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\r\n") + log;
+            if (!string.IsNullOrEmpty(input))
+                log += $"输入为：\r\n{input}\r\n";
+            if (!string.IsNullOrEmpty(output))
+                log += $"输出为：\r\n{output}\r\n";
+            log += (cusFoot ? this.foot + "\r\n" : "\r\n");
+        }
+
+        void WriteLog(string log)
+        {
+            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
+
+            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/log.txt", log);
+        }
+
+        /// <summary>
+        /// 将数据转换成日志字符串
+        /// </summary>
+        /// <typeparam name="T">范型数据类型</typeparam>
+        /// <param name="t">数据</param>
+        /// <returns>日志字符串</returns>
+        public string ConversionLog<T>(T t)
+        {
+            if (typeof(T) == typeof(Dictionary<string, string>))
+                return DictionaryParsing(t as Dictionary<string, string>);
+            else
+                throw new LogExceptionModel("不支持此类型参数解析！");
+        }
+
+        /// <summary>
+        /// 将字典类型转换为字符串
+        /// </summary>
+        /// <param name="dic"></param>
+        /// <returns></returns>
+        public static string DictionaryParsing(Dictionary<string, string> dic)
+        {
+            if (dic.Count <= 0)
+                return null;
+
+            string logVal = null;
+            foreach (var item in dic)
+                logVal += $"{item.Key}:{item.Value}\r\n";
+            return logVal;
+        }
+
+        /// <summary>
+        /// 自定义日志头部
+        /// </summary>
+        /// <param name="val">日志头部</param>
+        public void SetHead(string val)
+        {
+            cusHead = true;
+            head = val;
+        }
+
+        /// <summary>
+        /// 自定义日志尾部
+        /// </summary>
+        /// <param name="val">日志尾部</param>
+        public void SetFoot(string val)
+        {
+            cusFoot = true;
+            foot = val;
+        }
+
+        /// <summary>
+        /// 生成表格
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <param name="data">表格数据</param>
+        public void WriteTable(string fileName, Dictionary<string, string> data)
+        {
+            string tabTxt = null;
+            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
+            if (!File.Exists($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md"))
             {
-                msg = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "：" + msg + "\r\n";
-
-                Console.WriteLine(msg);
-
-                if (!isCreateText) return;
-
-                using (FileStream fileStream = new FileStream(path, fileMode, FileAccess.Write, FileShare.ReadWrite))
+                tabTxt = $"# {fileName}\r\n";
+                List<string> tabHead = new List<string>(data.Keys);
+                tabHead.Insert(0, "时间");
+                for (int i = 0; i < tabHead.Count; i++)
                 {
-                    //byte[] by = System.Text.Encoding.UTF8.GetBytes(msg + "\r\n");
-                    byte[] by = System.Text.Encoding.Default.GetBytes(msg + "\r\n");
-                    fileStream.Write(by, 0, by.Length);
+                    tabTxt += "|" + tabHead[i];
+                    if (i == tabHead.Count - 1)
+                        tabTxt += "|\r\n";
+                }
+                for (int i = 0; i < tabHead.Count; i++)
+                {
+                    tabTxt += "|:---:";
+                    if (i == tabHead.Count - 1)
+                        tabTxt += "|\r\n";
                 }
             }
-            catch (Exception ex)
+            List<string> tabBody = new List<string>(data.Values);
+            tabBody.Insert(0, DateTime.Now.ToString());
+            for (int i = 0; i < tabBody.Count; i++)
             {
-                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\t" + "写入异常\t" + ex.Message);
+                tabTxt += "|" + tabBody[i];
+                if (i == tabBody.Count - 1)
+                    tabTxt += "|\r\n";
             }
-            finally
-            {
-                Debug.WriteLine(msg);
-            }
+            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md", tabTxt);
+            Console.WriteLine($"已打印:{fileName}.md");
         }
 
-        private static int ReadLog(string path)
+        /// <summary>
+        /// 输出日志
+        /// </summary>
+        public void PrintLog()
         {
-
-            if (!isCreateText) return -1;
-
-
-            int line = 0;
-
-            try
-            {
-                using (StreamReader reader = new StreamReader(path))
-                {
-                    while (reader.ReadLine() != null)
-                    {
-                        line += 1;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("读取异常\t" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\t" + ex.Message);
-
-            }
-
-            return line;
-
+            LordLog();
+            WriteLog(log);
+            Console.WriteLine(log);
         }
 
-
-        public static void CreateLog(string msg)
+        /// <summary>
+        /// 模板输出日志
+        /// </summary>
+        /// <param name="path"></param>
+        public void PrintLog(string path)
         {
-            new Thread(() => Write(msg))
-            {
-                IsBackground = true
-            }.Start();
+            string temp = File.ReadAllText(path);
+            string tempLog = temp;
+            if (!string.IsNullOrEmpty(log))
+                tempLog = tempLog.Replace("[log]", log);
+            if (!string.IsNullOrEmpty(input))
+                tempLog = tempLog.Replace("[input]", input);
+            if (!string.IsNullOrEmpty(output))
+                tempLog = tempLog.Replace("[output]", output);
+            WriteLog(tempLog);
+            Console.WriteLine(tempLog);
         }
 
-        public static void CreateLog(string msg,string directoryPath)
+        /// <summary>
+        /// 异常输出
+        /// </summary>
+        /// <param name="ex">发生的异常</param>
+        public static void PrintError(Exception ex)
         {
-            new Thread(() => Write(msg,directoryPath))
-            {
-                IsBackground = true
-            }.Start();
+            string errorInfo = $"发生异常：{DateTime.Now}\r\n异常信息：\r\n{ex.Message}\r\n详细信息：\r\n{ex.StackTrace}\r\n";
+            Console.WriteLine(errorInfo);
+            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
+
+            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/error.txt", errorInfo);
         }
+    }
 
-        private static void Write(string msg,string directoryPath =null)
+
+    internal class LogExceptionModel : Exception
+    {
+        internal LogExceptionModel(string message) : base(message)
         {
-            lock (obj)
-            {
-                string path = CreatePath(ref directoryPath);
 
-                if (!File.Exists(path))
-                {
-                    if(!Directory.Exists(directoryPath))
-                     Directory.CreateDirectory(directoryPath);
-
-                    WriteLog(msg, FileMode.Create, path);
-                    LogLine = 1;
-                }
-             
-           /*     if (LogLine > RETAIN_LINE && ReadLog() > RETAIN_LINE)
-                {
-                    WriteLog(msg, FileMode.Create);
-                    LogLine = 1;
-                }
-                else
-                {*/
-                    WriteLog(msg, FileMode.Append,path);
-                    LogLine += 1;
-                //}
-                
-
-            }
-        }
-
-        private static string CreatePath(ref string directoryPath)
-        {
-            directoryPath = Path.Combine(DirectoryPath, directoryPath??"");
-            return Path.Combine(directoryPath, string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd")));
         }
     }
 }
