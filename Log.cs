@@ -103,15 +103,17 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <param name="data">表格数据</param>
-        public void WriteTable(string fileName, Dictionary<string, string> data)
+        public void WriteTable(string fileName, Dictionary<string, string>[] data)
         {
+            if (data.Length == 0)
+                return;
             string tabTxt = null;
             if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
                 Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
             if (!File.Exists($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md"))
             {
                 tabTxt = $"# {fileName}\r\n";
-                List<string> tabHead = new List<string>(data.Keys);
+                List<string> tabHead = new List<string>(data[0].Keys);
                 tabHead.Insert(0, "时间");
                 for (int i = 0; i < tabHead.Count; i++)
                 {
@@ -126,13 +128,16 @@ namespace NaflimHelperLibrary
                         tabTxt += "|\r\n";
                 }
             }
-            List<string> tabBody = new List<string>(data.Values);
-            tabBody.Insert(0, DateTime.Now.ToString());
-            for (int i = 0; i < tabBody.Count; i++)
+            foreach(var item in data)
             {
-                tabTxt += "|" + tabBody[i];
-                if (i == tabBody.Count - 1)
-                    tabTxt += "|\r\n";
+                List<string> tabBody = new List<string>(item.Values);
+                tabBody.Insert(0, DateTime.Now.ToString());
+                for (int i = 0; i < tabBody.Count; i++)
+                {
+                    tabTxt += "|" + tabBody[i];
+                    if (i == tabBody.Count - 1)
+                        tabTxt += "|\r\n";
+                }
             }
             File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md", tabTxt);
             Console.WriteLine($"已打印:{fileName}.md");
