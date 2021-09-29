@@ -151,7 +151,7 @@ namespace NaflimHelperLibrary
         /// <summary>
         /// 模板输出日志
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">模板路径</param>
         public void PrintLog(string path)
         {
             string temp = File.ReadAllText(path);
