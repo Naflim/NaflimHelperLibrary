@@ -46,3 +46,12 @@ E:\NaflimProject\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.cs
 E:\NaflimProject\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.csproj.CopyComplete
 E:\NaflimProject\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.dll
 E:\NaflimProject\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.pdb
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\NaflimHelperLibrary.dll.config
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\NaflimHelperLibrary.dll
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\NaflimHelperLibrary.pdb
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\System.Buffers.dll
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\System.Memory.dll
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.CoreCompileInputs.cache
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.CopyComplete
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.dll
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.pdb
