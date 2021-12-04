@@ -5,7 +5,7 @@ namespace NaflimHelperLibrary
 {
     public class RegistryHelper
     {
-        readonly RegistryKey hkcu = Registry.CurrentUser;
+        readonly static RegistryKey hkcu = Registry.CurrentUser;
         private string application;
 
         public RegistryHelper(string app)
@@ -29,16 +29,39 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
+        /// 注册表获取当前所有项
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetRegistItem()
+        {
+            RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            string[] registItem = software.GetSubKeyNames();
+            return registItem;
+        }
+
+        /// <summary>
+        /// 注册表获取指定所有项
+        /// </summary>
+        /// <param name="url">项路径</param>
+        /// <returns></returns>
+        public static string[] GetRegistItem(string url)
+        {
+            RegistryKey software = hkcu.OpenSubKey(url, true);
+            string[] registItem = software.GetSubKeyNames();
+            return registItem;
+        }
+
+        /// <summary>
         /// 判断项是否存在
         /// </summary>
         /// <param name="sKeyName">项民</param>
         /// <param name="url">项地址</param>
         /// <returns>结果</returns>
-        public bool IsRegistryKeyExist(string sKeyName, string url)
+        public static bool IsRegistryKeyExist(string sKeyName, string url)
         {
             string[] sKeyNameColl;
             RegistryKey hkSoftWare = hkcu.OpenSubKey(url);
-            sKeyNameColl = hkSoftWare.GetSubKeyNames(); //获取SOFTWARE下所有的子项
+            sKeyNameColl = hkSoftWare.GetSubKeyNames(); 
             foreach (string sName in sKeyNameColl)
             {
                 if (sName == sKeyName)
@@ -60,7 +83,7 @@ namespace NaflimHelperLibrary
         {
             string[] sValueNameColl;
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
-            sValueNameColl = software.GetValueNames(); //获取test下所有键值的名称
+            sValueNameColl = software.GetValueNames(); 
             foreach (string sName in sValueNameColl)
             {
                 if (sName == sValueName)
@@ -70,6 +93,37 @@ namespace NaflimHelperLibrary
                 }
             }
             software.Close();
+            return false;
+        }
+
+        /// <summary>
+        /// 判断值是否存在
+        /// </summary>
+        /// <param name="sValueName">值名</param>
+        /// <returns>结果</returns>
+        public bool IsRegistryValueNameExist(string[] sValueName)
+        {
+            bool flag = false;
+            string[] sValueNameColl;
+            RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            sValueNameColl = software.GetValueNames(); 
+            foreach (string name in sValueName)
+            {
+                flag = false;
+                foreach (string sName in sValueNameColl)
+                {
+                    if (sName == name)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                    return false;
+            }
+            software.Close();
+            if (flag)
+                return true;
             return false;
         }
 
@@ -92,6 +146,17 @@ namespace NaflimHelperLibrary
             foreach (KeyValuePair<string, string> kvp in valuePairs)
                 hkSoftWare.SetValue(kvp.Key, kvp.Value, RegistryValueKind.String);
 
+            hkSoftWare.Close();
+        }
+
+        /// <summary>
+        /// 删除当前子项
+        /// </summary>
+        /// <param name="itemName">项名</param>
+        public void DelRegistryItem(string itemName)
+        {
+            RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            hkSoftWare.DeleteSubKey(itemName, true);
             hkSoftWare.Close();
         }
 

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
-using System.Web.Script.Serialization;
+using System.Threading.Tasks;
 
 namespace NaflimHelperLibrary
 {
@@ -20,7 +21,7 @@ namespace NaflimHelperLibrary
             //获取请求的方式
             request.Method = "post";
             request.ContentType = "application/json";
-            var param = ObjectToJson(body);
+            var param = TypeConversion.ObjectToJson(body);
             byte[] bytes = Encoding.UTF8.GetBytes(param);
             return getReportsContent(request, bytes);
         }
@@ -32,7 +33,7 @@ namespace NaflimHelperLibrary
         /// <param name="body">上传数据</param>
         /// <param name="url">上传地址</param>
         /// <returns>回调json字符串</returns>
-        public static string RequestInterface(Dictionary<string, string> header,object body ,string url)
+        public static string RequestInterface(Dictionary<string, string> header, object body, string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             //获取请求的方式
@@ -40,9 +41,9 @@ namespace NaflimHelperLibrary
             request.ContentType = "application/json";
             foreach (KeyValuePair<string, string> pair in header)
                 request.Headers.Add(pair.Key, pair.Value);
-            var param = ObjectToJson(body);
+            var param = TypeConversion.ObjectToJson(body);
             byte[] bytes = Encoding.UTF8.GetBytes(param);
-            return getReportsContent(request,bytes);
+            return getReportsContent(request, bytes);
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace NaflimHelperLibrary
         /// <param name="http">http对象</param>
         /// <param name="bytes">body字节</param>
         /// <returns>回应内容</returns>
-        private static string getReportsContent(HttpWebRequest http,byte[] bytes)
+        private static string getReportsContent(HttpWebRequest http, byte[] bytes)
         {
             http.ContentLength = bytes.Length;
             Stream streamPager = http.GetRequestStream();
@@ -78,14 +79,26 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
-        /// 对象转json
+        /// 表单请求接口
         /// </summary>
-        /// <param name="obj">转换对象</param>
-        /// <returns></returns>
-        public static string ObjectToJson(object obj)
+        /// <param name="url">接口地址</param>
+        /// <param name="headers">请求头</param>
+        /// <param name="body">请求头</param>
+        /// <returns>响应结果</returns>
+        async public static Task<string> FormInterface(string url, Dictionary<string, string> headers, Dictionary<string, string> body)
         {
-            JavaScriptSerializer jsonSerialize = new JavaScriptSerializer();
-            return jsonSerialize.Serialize(obj);
+            string res = null;
+            HttpClient _httpClient = new HttpClient();
+            var postContent = new MultipartFormDataContent();
+            postContent.Headers.Add("ContentType", $"multipart/form-data");
+            foreach (var head in headers)
+                postContent.Headers.Add(head.Key, head.Value);
+            foreach (var content in body)
+                postContent.Add(new StringContent(content.Value), content.Key);
+            var response = await _httpClient.PostAsync(url, postContent).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+                res = response.Content.ReadAsStringAsync().Result;
+            return res;
         }
     }
 }

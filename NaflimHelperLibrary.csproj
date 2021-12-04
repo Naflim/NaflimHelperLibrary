@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataConversion.cs" />
     <Compile Include="DBhelper.cs" />
     <Compile Include="EncodingConversion.cs" />
     <Compile Include="InterfaceHelper.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="RegistryHelper.cs" />
     <Compile Include="RegularJudgment.cs" />
     <Compile Include="TimeHelper.cs" />
+    <Compile Include="TypeConversion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -5,8 +5,15 @@ namespace NaflimHelperLibrary
 {
     public class EncodingConversion
     {
-        Encoding utf = Encoding.GetEncoding("utf-8");
-        Encoding gbk = Encoding.GetEncoding("gb2312");
+        Encoding utf;
+        Encoding gbk;
+
+        public EncodingConversion()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            utf = Encoding.GetEncoding("utf-8");
+            gbk = Encoding.GetEncoding("gb2312");
+        }
 
         /// <summary>
         /// gbk转utf-8
@@ -48,6 +55,8 @@ namespace NaflimHelperLibrary
             return TransferEncodingBys(utf, gbk, txt);
         }
 
+
+
         /// <summary>
         /// 字符串编码转换
         /// </summary>
@@ -71,7 +80,6 @@ namespace NaflimHelperLibrary
         /// <returns>转换后字节数组</returns>
         public static byte[] TransferEncodingBys(Encoding srcEncoding, Encoding dstEncoding, string srcStr)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             byte[] srcBytes = srcEncoding.GetBytes(srcStr);
             return Encoding.Convert(srcEncoding, dstEncoding, srcBytes);
         }

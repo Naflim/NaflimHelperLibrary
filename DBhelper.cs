@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -82,7 +82,7 @@ namespace NaflimHelperLibrary
         /// <param name="sql">SQL语句</param>
         /// <param name="parameters">SQL语句参数</param>
         /// <returns></returns>
-        public DataTable GetData(string sql, params SqlParameter[] parameters)
+        public DataTable GetData(string sql, params MySqlParameter[] parameters)
         {
             try
             {

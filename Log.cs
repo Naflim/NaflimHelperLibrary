@@ -54,10 +54,31 @@ namespace NaflimHelperLibrary
         /// <typeparam name="T">范型数据类型</typeparam>
         /// <param name="t">数据</param>
         /// <returns>日志字符串</returns>
-        public string ConversionLog<T>(T t)
+        public static string ConversionLog<T>(T t)
         {
             if (typeof(T) == typeof(Dictionary<string, string>))
                 return DictionaryParsing(t as Dictionary<string, string>);
+            if (typeof(T) == typeof(string[]))
+                return string.Join(",", t as string[]);
+            if (typeof(T) == typeof(List<string>))
+                return string.Join(",", t as List<string>);
+            else
+                throw new LogExceptionModel("不支持此类型参数解析！");
+        }
+
+        /// <summary>
+        /// 将数据转换成日志字符串(字符串型)
+        /// </summary>
+        /// <typeparam name="T">范型数据类型</typeparam>
+        /// <param name="t">数据</param>
+        /// <param name="separate">分割符号</param>
+        /// <returns>日志字符串</returns>
+        public static string ConversionLog<T>(T t,string separate)
+        {
+            if (typeof(T) == typeof(string[]))
+                return string.Join(separate, t as string[]);
+            if (typeof(T) == typeof(List<string>))
+                return string.Join(separate, t as List<string>);
             else
                 throw new LogExceptionModel("不支持此类型参数解析！");
         }
@@ -105,8 +126,6 @@ namespace NaflimHelperLibrary
         /// <param name="data">表格数据</param>
         public void WriteTable(string fileName, Dictionary<string, string>[] data)
         {
-            if (data.Length == 0)
-                return;
             string tabTxt = null;
             if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
                 Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
@@ -128,7 +147,7 @@ namespace NaflimHelperLibrary
                         tabTxt += "|\r\n";
                 }
             }
-            foreach(var item in data)
+            foreach (var item in data)
             {
                 List<string> tabBody = new List<string>(item.Values);
                 tabBody.Insert(0, DateTime.Now.ToString());
@@ -156,7 +175,7 @@ namespace NaflimHelperLibrary
         /// <summary>
         /// 模板输出日志
         /// </summary>
-        /// <param name="path">模板路径</param>
+        /// <param name="path"></param>
         public void PrintLog(string path)
         {
             string temp = File.ReadAllText(path);
