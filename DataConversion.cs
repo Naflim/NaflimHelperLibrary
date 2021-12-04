@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace NaflimHelperLibrary
@@ -13,9 +12,9 @@ namespace NaflimHelperLibrary
         /// <returns>EPC数组</returns>
         public static string[] getEPC(byte[] bytes)
         {
-            List<string> strarr = new List<string>();
+            string[] strarr = new string[1000];
             Grouping(strarr, bytes, 0, 0);
-            return strarr.ToArray();
+            return strarr;
         }
 
         /// <summary>
@@ -25,7 +24,7 @@ namespace NaflimHelperLibrary
         /// <param name="byarr">byte数组</param>
         /// <param name="index">当前递归的bype数组索引</param>
         /// <param name="count">当前递归的EPC字符串数组索引</param>
-        public static void Grouping(List<string> strarr, byte[] byarr, int index, int count)
+        public static void Grouping(string[] strarr, byte[] byarr, int index, int count)
         {
             byte[] snaparr = new byte[byarr[index]];
             if (byarr[index] != 0 && snaparr.Length >= byarr[index])
@@ -71,9 +70,8 @@ namespace NaflimHelperLibrary
                 byte[] newBuffer = mi.ComputeHash(buffer);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < newBuffer.Length; i++)
-                {
                     sb.Append(newBuffer[i].ToString("x2"));
-                }
+
                 return sb.ToString();
             }
         }

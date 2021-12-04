@@ -67,23 +67,6 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
-        /// 将数据转换成日志字符串(字符串型)
-        /// </summary>
-        /// <typeparam name="T">范型数据类型</typeparam>
-        /// <param name="t">数据</param>
-        /// <param name="separate">分割符号</param>
-        /// <returns>日志字符串</returns>
-        public static string ConversionLog<T>(T t,string separate)
-        {
-            if (typeof(T) == typeof(string[]))
-                return string.Join(separate, t as string[]);
-            if (typeof(T) == typeof(List<string>))
-                return string.Join(separate, t as List<string>);
-            else
-                throw new LogExceptionModel("不支持此类型参数解析！");
-        }
-
-        /// <summary>
         /// 将字典类型转换为字符串
         /// </summary>
         /// <param name="dic"></param>

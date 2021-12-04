@@ -78,13 +78,6 @@ namespace NaflimHelperLibrary
             request.Timeout = 30000;
         }
 
-        /// <summary>
-        /// 表单请求接口
-        /// </summary>
-        /// <param name="url">接口地址</param>
-        /// <param name="headers">请求头</param>
-        /// <param name="body">请求头</param>
-        /// <returns>响应结果</returns>
         async public static Task<string> FormInterface(string url, Dictionary<string, string> headers, Dictionary<string, string> body)
         {
             string res = null;
