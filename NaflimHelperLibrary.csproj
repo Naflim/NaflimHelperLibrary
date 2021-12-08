@@ -94,6 +94,7 @@
     <Compile Include="RegistryHelper.cs" />
     <Compile Include="TimeHelper.cs" />
     <Compile Include="TypeConversion.cs" />
+    <Compile Include="XMLHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
