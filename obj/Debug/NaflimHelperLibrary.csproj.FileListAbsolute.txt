@@ -55,7 +55,6 @@ E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.cspr
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.CopyComplete
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.dll
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.pdb
-E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.AssemblyReference.cache
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\Newtonsoft.Json.dll
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\Newtonsoft.Json.xml
 D:\Work\Workspace\Git\GitHub\NaflimHelperLibrary\bin\Debug\NaflimHelperLibrary.dll.config

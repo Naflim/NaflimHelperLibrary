@@ -174,8 +174,9 @@ namespace NaflimHelperLibrary
         /// <param name="path">程序路径</param>
         /// <param name="exeName">程序名</param>
         /// <param name="flag">是否自启</param>
-        public static void SelfStarting(string path,string exeName,bool flag)
+        public static void SelfStarting(string exeName,bool flag)
         {
+            string path = System.Environment.CurrentDirectory;
             string keyName = path.Substring(path.LastIndexOf("\\") + 1);
             RegistryKey Rkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 

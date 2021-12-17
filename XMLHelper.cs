@@ -56,6 +56,24 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
+        /// 实体类转xml
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="obj">实体类</param>
+        /// <returns>xml文档</returns>
+        public static string XmlSerialize<T>(T obj)
+        {
+            using (StringWriter sw = new StringWriter())
+            {
+                Type t = obj.GetType();
+                XmlSerializer serializer = new XmlSerializer(obj.GetType());
+                serializer.Serialize(sw, obj);
+                sw.Close();
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
         /// 返回指定节点值
         /// </summary>
         /// <param name="xml">xml字符串</param>
