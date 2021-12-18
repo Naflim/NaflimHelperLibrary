@@ -167,5 +167,31 @@ namespace NaflimHelperLibrary
         {
             hkcu.Close();
         }
+
+        /// <summary>
+        /// 开机自启
+        /// </summary>
+        /// <param name="path">程序路径</param>
+        /// <param name="exeName">程序名</param>
+        /// <param name="flag">是否自启</param>
+        public static void SelfStarting(string exeName, bool flag)
+        {
+            string path = System.AppDomain.CurrentDomain.BaseDirectory;
+            string keyName = path.Substring(path.LastIndexOf("\\") + 1);
+            RegistryKey Rkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            if (flag)
+            {
+                if (Rkey == null)
+                    Rkey = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+
+                Rkey.SetValue(keyName, path + $"{exeName}.exe");
+            }
+            else
+            {
+                if (Rkey != null)
+                    Rkey.DeleteValue(keyName, false);
+            }
+        }
     }
 }

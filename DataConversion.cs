@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace NaflimHelperLibrary
 {
@@ -11,7 +13,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="bytes">标签数据</param>
         /// <returns>EPC数组</returns>
-        public static string[] getEPC(byte[] bytes)
+        public static string[] GetEPC(byte[] bytes)
         {
             List<string> strarr = new List<string>();
             Grouping(strarr, bytes, 0, 0);
@@ -33,7 +35,7 @@ namespace NaflimHelperLibrary
                 for (int i = index + 1, j = 0; i <= index + byarr[index]; i++, j++)
                     snaparr[j] = byarr[i];
 
-                strarr[count] = byteToHexStr(snaparr);
+                strarr[count] = ByteToHexStr(snaparr);
                 count++;
                 Grouping(strarr, byarr, index + byarr[index] + 2, count);
             }
@@ -44,7 +46,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="bytes">字符数组</param>
         /// <returns></returns>
-        private static string byteToHexStr(byte[] bytes)
+        private static string ByteToHexStr(byte[] bytes)
         {
             string returnStr = null;
             if (bytes != null)
@@ -76,6 +78,50 @@ namespace NaflimHelperLibrary
                 }
                 return sb.ToString();
             }
+        }
+
+        /// <summary>
+        /// 获取json项的值
+        /// </summary>
+        /// <param name="jsonString">json字符串</param>
+        /// <param name="key">项名</param>
+        /// <returns>项值</returns>
+        public static List<string> GetJsonValue(string jsonString, string key)
+        {
+            string pattern = $"\"{key}\":\"(.*?)\\\"";
+            MatchCollection matches = Regex.Matches(jsonString, pattern, RegexOptions.IgnoreCase);
+            List<string> lst = new List<string>();
+            foreach (Match m in matches)
+                lst.Add(m.Groups[1].Value);
+
+            return lst;
+        }
+
+        /// <summary>
+        /// 获取json项的值
+        /// </summary>
+        /// <param name="json">json字符串</param>
+        /// <param name="item">项名</param>
+        /// <returns>项值</returns>
+        public static string GetJsonItem(string json,string[] item)
+        {
+
+            JavaScriptSerializer Jss = new JavaScriptSerializer();
+            Dictionary<string, object> DicText = (Dictionary<string, object>)Jss.DeserializeObject(json);
+
+            foreach(string keyName in item)
+            {
+                if (!DicText.ContainsKey(keyName))
+                    return null;
+                else
+                {
+                    if (DicText[keyName] is string || DicText[keyName] is int)
+                        return DicText[keyName].ToString();
+                    else
+                        DicText = DicText[keyName] as Dictionary<string, object>;
+                }
+            }
+            return null;
         }
     }
 }
