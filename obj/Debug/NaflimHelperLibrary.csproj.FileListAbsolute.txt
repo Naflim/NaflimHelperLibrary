@@ -69,3 +69,4 @@ D:\Work\Workspace\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.c
 D:\Work\Workspace\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.csproj.CopyComplete
 D:\Work\Workspace\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.dll
 D:\Work\Workspace\Git\GitHub\NaflimHelperLibrary\obj\Debug\NaflimHelperLibrary.pdb
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.AssemblyReference.cache
