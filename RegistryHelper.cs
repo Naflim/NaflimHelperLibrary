@@ -176,7 +176,7 @@ namespace NaflimHelperLibrary
         /// <param name="flag">是否自启</param>
         public static void SelfStarting(string exeName,bool flag)
         {
-            string path = System.Windows.Forms.Application.StartupPath;
+            string path = System.AppDomain.CurrentDomain.BaseDirectory;
             string keyName = path.Substring(path.LastIndexOf("\\") + 1);
             RegistryKey Rkey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
@@ -185,7 +185,7 @@ namespace NaflimHelperLibrary
                 if (Rkey == null)
                     Rkey = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
 
-                Rkey.SetValue(keyName, path + $@"\{exeName}.exe");
+                Rkey.SetValue(keyName, path + $"{exeName}.exe");
             }
             else
             {
