@@ -13,7 +13,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="bytes">标签数据</param>
         /// <returns>EPC数组</returns>
-        public static string[] getEPC(byte[] bytes)
+        public static string[] GetEPC(byte[] bytes)
         {
             string[] strarr = new string[1000];
             Grouping(strarr, bytes, 0, 0);
@@ -35,7 +35,7 @@ namespace NaflimHelperLibrary
                 for (int i = index + 1, j = 0; i <= index + byarr[index]; i++, j++)
                     snaparr[j] = byarr[i];
 
-                strarr[count] = byteToHexStr(snaparr);
+                strarr[count] = ByteToHexStr(snaparr);
                 count++;
                 Grouping(strarr, byarr, index + byarr[index] + 2, count);
             }
@@ -46,7 +46,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="bytes">字符数组</param>
         /// <returns></returns>
-        private static string byteToHexStr(byte[] bytes)
+        private static string ByteToHexStr(byte[] bytes)
         {
             string returnStr = null;
             if (bytes != null)
@@ -73,8 +73,9 @@ namespace NaflimHelperLibrary
                 byte[] newBuffer = mi.ComputeHash(buffer);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < newBuffer.Length; i++)
+                {
                     sb.Append(newBuffer[i].ToString("x2"));
-
+                }
                 return sb.ToString();
             }
         }
@@ -102,13 +103,13 @@ namespace NaflimHelperLibrary
         /// <param name="json">json字符串</param>
         /// <param name="item">项名</param>
         /// <returns>项值</returns>
-        public static string GetJsonItem(string json, string[] item)
+        public static string GetJsonItem(string json,string[] item)
         {
 
             JavaScriptSerializer Jss = new JavaScriptSerializer();
             Dictionary<string, object> DicText = (Dictionary<string, object>)Jss.DeserializeObject(json);
 
-            foreach (string keyName in item)
+            foreach(string keyName in item)
             {
                 if (!DicText.ContainsKey(keyName))
                     return null;
@@ -121,6 +122,21 @@ namespace NaflimHelperLibrary
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// 异或和校验
+        /// </summary>
+        /// <param name="data">校验数据</param>
+        /// <param name="temp">输出校验结果</param>
+        public static int BCC(byte[] data)
+        {
+            int temp = 0;
+            for (int index = 0; index < data.Length; index++)
+            {
+                temp ^= data[index];
+            }
+            return temp;
         }
     }
 }
