@@ -11,6 +11,9 @@ using System.Xml.Serialization;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// XML帮助类
+    /// </summary>
     public class XMLHelper
     {
         /// <summary>

@@ -2,6 +2,9 @@
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 类型转换
+    /// </summary>
     public static class TypeConversion
     {
         /// <summary>

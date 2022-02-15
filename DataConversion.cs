@@ -7,6 +7,9 @@ using System.Web.Script.Serialization;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 数据转换
+    /// </summary>
     public class DataConversion
     {
         /// <summary>

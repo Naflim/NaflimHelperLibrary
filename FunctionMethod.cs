@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 功能方法
+    /// </summary>
     public class FunctionMethod
     {
         public static void Speaking(string saying)

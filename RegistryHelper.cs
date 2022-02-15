@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 注册表帮助类
+    /// </summary>
     public class RegistryHelper
     {
         readonly static RegistryKey hkcu = Registry.CurrentUser;

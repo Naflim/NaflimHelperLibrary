@@ -2,6 +2,9 @@
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 时间帮助类
+    /// </summary>
     public class TimeHelper
     {
         /// <summary>

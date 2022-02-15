@@ -4,6 +4,9 @@ using System.IO;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 日志
+    /// </summary>
     public class Log
     {
         public string log { get; set; }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 接口请求帮助类
+    /// </summary>
     public class InterfaceHelper
     {
         /// <summary>
