@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -125,7 +126,7 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
-        /// 异或和校验
+        /// BCC校验
         /// </summary>
         /// <param name="data">校验数据</param>
         /// <param name="temp">输出校验结果</param>
@@ -137,6 +138,22 @@ namespace NaflimHelperLibrary
                 temp ^= data[index];
             }
             return temp;
+        }
+
+        /// <summary>
+        /// 字符串转16进制字节数组
+        /// </summary>
+        /// <param name="hexString">数据字符串</param>
+        /// <returns>16进制字节数组</returns>
+        public static byte[] StrToHexByteArr(string hexString)
+        {
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
         }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 正则判断
+    /// </summary>
     public class RegularJudgment
     {
         /// <summary>
