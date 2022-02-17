@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nancy.Json;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace NaflimHelperLibrary
 {

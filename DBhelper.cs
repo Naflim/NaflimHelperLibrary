@@ -25,20 +25,13 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public DataTable GetData(string sql, params SqlParameter[] parameters)
         {
-            try
-            {
-                SqlDataAdapter adapter = new SqlDataAdapter(sql, conStr);
-                if (parameters != null)
-                    adapter.SelectCommand.Parameters.AddRange(parameters);
-                DataTable data = new DataTable();
-                adapter.Fill(data);
-                adapter.Dispose();
-                return data;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            SqlDataAdapter adapter = new SqlDataAdapter(sql, conStr);
+            if (parameters != null)
+                adapter.SelectCommand.Parameters.AddRange(parameters);
+            DataTable data = new DataTable();
+            adapter.Fill(data);
+            adapter.Dispose();
+            return data;
         }
 
         /// <summary>
@@ -50,21 +43,14 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public bool GetExecuteNonQuery(string sql, params SqlParameter[] parameters)
         {
-            try
+            using (SqlConnection connection = new SqlConnection(conStr))
             {
-                using (SqlConnection connection = new SqlConnection(conStr))
-                {
-                    if (connection.State == ConnectionState.Closed)
-                        connection.Open();
-                    SqlCommand command = new SqlCommand(sql, connection);
-                    if (parameters != null)
-                        command.Parameters.AddRange(parameters);
-                    return command.ExecuteNonQuery() > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                if (connection.State == ConnectionState.Closed)
+                    connection.Open();
+                SqlCommand command = new SqlCommand(sql, connection);
+                if (parameters != null)
+                    command.Parameters.AddRange(parameters);
+                return command.ExecuteNonQuery() > 0;
             }
         }
     }
@@ -90,22 +76,15 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public DataTable GetData(string sql, params MySqlParameter[] parameters)
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(conStr))
             {
-                using (MySqlConnection connection = new MySqlConnection(conStr))
-                {
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(sql, conStr);
-                    if (parameters != null)
-                        adapter.SelectCommand.Parameters.AddRange(parameters);
-                    DataTable data = new DataTable();
-                    adapter.Fill(data);
-                    adapter.Dispose();
-                    return data;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                MySqlDataAdapter adapter = new MySqlDataAdapter(sql, conStr);
+                if (parameters != null)
+                    adapter.SelectCommand.Parameters.AddRange(parameters);
+                DataTable data = new DataTable();
+                adapter.Fill(data);
+                adapter.Dispose();
+                return data;
             }
         }
 
@@ -117,21 +96,14 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public bool GetExecuteNonQuery(string sql, params MySqlParameter[] parameters)
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(conStr))
             {
-                using (MySqlConnection connection = new MySqlConnection(conStr))
-                {
-                    if (connection.State == ConnectionState.Closed)
-                        connection.Open();
-                    MySqlCommand command = new MySqlCommand(sql, connection);
-                    if (parameters != null)
-                        command.Parameters.AddRange(parameters);
-                    return command.ExecuteNonQuery() > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                if (connection.State == ConnectionState.Closed)
+                    connection.Open();
+                MySqlCommand command = new MySqlCommand(sql, connection);
+                if (parameters != null)
+                    command.Parameters.AddRange(parameters);
+                return command.ExecuteNonQuery() > 0;
             }
         }
     }
