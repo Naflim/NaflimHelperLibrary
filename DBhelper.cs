@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// SQLServer帮助类
+    /// </summary>
     public class SQLserHelper
     {
         //连接数据库
@@ -66,6 +69,9 @@ namespace NaflimHelperLibrary
         }
     }
 
+    /// <summary>
+    /// MySQL帮助类
+    /// </summary>
     public class MySQLHelper
     {
         //连接数据库

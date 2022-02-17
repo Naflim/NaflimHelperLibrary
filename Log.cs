@@ -4,6 +4,9 @@ using System.IO;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 日志
+    /// </summary>
     public class Log
     {
         public string log { get; set; }
@@ -22,7 +25,7 @@ namespace NaflimHelperLibrary
 
         public Log(string log)
         {
-            this.log = log + "\r\n";
+            this.log = log + Environment.NewLine;
         }
 
         public Log(string input, string output)
@@ -32,20 +35,28 @@ namespace NaflimHelperLibrary
         }
         void LordLog()
         {
-            log = (cusHead ? $"{head}\r\n" : $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\r\n") + log;
+            log = (cusHead ? $"{head}{Environment.NewLine}" : $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}") + log;
             if (!string.IsNullOrEmpty(input))
-                log += $"输入为：\r\n{input}\r\n";
+                log += $"输入为：{Environment.NewLine}{input}{Environment.NewLine}";
             if (!string.IsNullOrEmpty(output))
-                log += $"输出为：\r\n{output}\r\n";
-            log += (cusFoot ? this.foot + "\r\n" : "\r\n");
+                log += $"输出为：{Environment.NewLine}{output}{Environment.NewLine}";
+            log += (cusFoot ? this.foot + Environment.NewLine : Environment.NewLine);
         }
 
         void WriteLog(string log)
         {
-            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
+            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
 
-            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/log.txt", log);
+            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/log.txt", log);
+        }
+
+        void WriteLog(string fileName,string log)
+        {
+            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
+
+            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{fileName}.txt", log);
         }
 
         /// <summary>
@@ -95,7 +106,7 @@ namespace NaflimHelperLibrary
 
             string logVal = null;
             foreach (var item in dic)
-                logVal += $"{item.Key}:{item.Value}\r\n";
+                logVal += $"{item.Key}:{item.Value}{Environment.NewLine}";
             return logVal;
         }
 
@@ -127,24 +138,24 @@ namespace NaflimHelperLibrary
         public void WriteTable(string fileName, Dictionary<string, string>[] data)
         {
             string tabTxt = null;
-            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
-            if (!File.Exists($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md"))
+            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
+            if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md"))
             {
-                tabTxt = $"# {fileName}\r\n";
+                tabTxt = $"# {fileName}{Environment.NewLine}";
                 List<string> tabHead = new List<string>(data[0].Keys);
                 tabHead.Insert(0, "时间");
                 for (int i = 0; i < tabHead.Count; i++)
                 {
                     tabTxt += "|" + tabHead[i];
                     if (i == tabHead.Count - 1)
-                        tabTxt += "|\r\n";
+                        tabTxt += "|{Environment.NewLine}";
                 }
                 for (int i = 0; i < tabHead.Count; i++)
                 {
                     tabTxt += "|:---:";
                     if (i == tabHead.Count - 1)
-                        tabTxt += "|\r\n";
+                        tabTxt += "|{Environment.NewLine}";
                 }
             }
             foreach (var item in data)
@@ -155,10 +166,10 @@ namespace NaflimHelperLibrary
                 {
                     tabTxt += "|" + tabBody[i];
                     if (i == tabBody.Count - 1)
-                        tabTxt += "|\r\n";
+                        tabTxt += "|{Environment.NewLine}";
                 }
             }
-            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md", tabTxt);
+            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md", tabTxt);
             Console.WriteLine($"已打印:{fileName}.md");
         }
 
@@ -173,10 +184,21 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
+        /// 输出日志
+        /// </summary>
+        /// <param name="fileName">日志文件名</param>
+        public void PrintLog(string fileName)
+        {
+            LordLog();
+            WriteLog(fileName,log);
+            Console.WriteLine(log);
+        }
+
+        /// <summary>
         /// 模板输出日志
         /// </summary>
         /// <param name="path"></param>
-        public void PrintLog(string path)
+        public void TemplateLog(string path)
         {
             string temp = File.ReadAllText(path);
             string tempLog = temp;
@@ -196,12 +218,12 @@ namespace NaflimHelperLibrary
         /// <param name="ex">发生的异常</param>
         public static void PrintError(Exception ex)
         {
-            string errorInfo = $"发生异常：{DateTime.Now}\r\n异常信息：\r\n{ex.Message}\r\n详细信息：\r\n{ex.StackTrace}\r\n";
+            string errorInfo = $"发生异常：{DateTime.Now}{Environment.NewLine}异常信息：{Environment.NewLine}{ex.Message}{Environment.NewLine}详细信息：{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
             Console.WriteLine(errorInfo);
-            if (Directory.Exists($"log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"log/{DateTime.Now:yyyy-MM-dd}");
+            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
 
-            File.AppendAllText($"log/{DateTime.Now:yyyy-MM-dd}/error.txt", errorInfo);
+            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/error.txt", errorInfo);
         }
     }
 
