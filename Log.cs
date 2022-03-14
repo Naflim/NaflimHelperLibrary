@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 
 namespace NaflimHelperLibrary
 {
@@ -51,7 +53,7 @@ namespace NaflimHelperLibrary
             File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/log.txt", log);
         }
 
-        void WriteLog(string fileName,string log)
+        void WriteLog(string fileName, string log)
         {
             if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
                 Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
@@ -84,7 +86,7 @@ namespace NaflimHelperLibrary
         /// <param name="t">数据</param>
         /// <param name="separate">分割符号</param>
         /// <returns>日志字符串</returns>
-        public static string ConversionLog<T>(T t,string separate)
+        public static string ConversionLog<T>(T t, string separate)
         {
             if (typeof(T) == typeof(string[]))
                 return string.Join(separate, t as string[]);
@@ -135,41 +137,55 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <param name="data">表格数据</param>
-        public void WriteTable(string fileName, Dictionary<string, string>[] data)
+        public static void WriteTable(string fileName, DataTable data)
         {
             string tabTxt = null;
-            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
-            if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md"))
+            List<string> tabHead = new List<string>();
+            string filePath = $"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}";
+            string file = $"{filePath}/{fileName}.md";
+
+            if (Directory.Exists(filePath) == false)
+                Directory.CreateDirectory(filePath);
+
+            if (!File.Exists(file))
             {
+                foreach (DataColumn col in data.Columns)
+                    tabHead.Add(col.ColumnName);
+
                 tabTxt = $"# {fileName}{Environment.NewLine}";
-                List<string> tabHead = new List<string>(data[0].Keys);
-                tabHead.Insert(0, "时间");
+
+                tabTxt += "|记录时间";
                 for (int i = 0; i < tabHead.Count; i++)
-                {
-                    tabTxt += "|" + tabHead[i];
-                    if (i == tabHead.Count - 1)
-                        tabTxt += "|{Environment.NewLine}";
-                }
-                for (int i = 0; i < tabHead.Count; i++)
-                {
+                    tabTxt += $"|{tabHead[i]}";
+                tabTxt += $"|{Environment.NewLine}";
+
+                for (int i = 0; i < tabHead.Count + 1; i++)
                     tabTxt += "|:---:";
-                    if (i == tabHead.Count - 1)
-                        tabTxt += "|{Environment.NewLine}";
-                }
+                tabTxt += $"|{Environment.NewLine}";
             }
-            foreach (var item in data)
+            else
             {
-                List<string> tabBody = new List<string>(item.Values);
-                tabBody.Insert(0, DateTime.Now.ToString());
-                for (int i = 0; i < tabBody.Count; i++)
-                {
-                    tabTxt += "|" + tabBody[i];
-                    if (i == tabBody.Count - 1)
-                        tabTxt += "|{Environment.NewLine}";
-                }
+                string head = null;
+                StreamReader sr = new StreamReader(file);
+
+                for (int i = 0; i < 2; i++)
+                    head = sr.ReadLine();  //将值插入
+
+                sr.Close();
+
+                tabHead = head.Split('|').ToList();
+                tabHead.RemoveAll(v => v == "");
+                tabHead.RemoveAt(0);
             }
-            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{fileName}.md", tabTxt);
+
+            int len = data.Rows.Count;
+            for (int i = 0; i < len; i++)
+            {
+                tabTxt += $"|{DateTime.Now}";
+                tabHead.ForEach(v => tabTxt += $"|{data.Rows[i][v]}");
+                tabTxt += $"|{Environment.NewLine}";
+            }
+            File.AppendAllText(file, tabTxt);
             Console.WriteLine($"已打印:{fileName}.md");
         }
 
@@ -190,7 +206,7 @@ namespace NaflimHelperLibrary
         public void PrintLog(string fileName)
         {
             LordLog();
-            WriteLog(fileName,log);
+            WriteLog(fileName, log);
             Console.WriteLine(log);
         }
 

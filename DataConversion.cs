@@ -1,5 +1,4 @@
-﻿using Nancy.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -107,25 +106,23 @@ namespace NaflimHelperLibrary
         /// <param name="json">json字符串</param>
         /// <param name="item">项名</param>
         /// <returns>项值</returns>
-        public static string GetJsonItem(string json,string[] item)
+        public static string GetJsonItem(string json, List<string> item)
         {
+            var obj = System.Json.JsonValue.Parse(json);
 
-            JavaScriptSerializer Jss = new JavaScriptSerializer();
-            Dictionary<string, object> DicText = (Dictionary<string, object>)Jss.DeserializeObject(json);
-
-            foreach(string keyName in item)
+            if (obj.ContainsKey(item[0]))
             {
-                if (!DicText.ContainsKey(keyName))
-                    return null;
+                string val = obj[item[0]].ToString();
+                if (item.Count == 1)
+                    return val;
                 else
                 {
-                    if (DicText[keyName] is string || DicText[keyName] is int)
-                        return DicText[keyName].ToString();
-                    else
-                        DicText = DicText[keyName] as Dictionary<string, object>;
+                    item.RemoveAt(0);
+                    return GetJsonItem(val, item);
                 }
             }
-            return null;
+            else
+                return null;
         }
 
         /// <summary>
