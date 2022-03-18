@@ -33,6 +33,7 @@ namespace NaflimHelperLibrary
             this.input = input;
             this.output = output;
         }
+
         void LordLog()
         {
             log = (cusHead ? $"{head}{Environment.NewLine}" : $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}") + log;
