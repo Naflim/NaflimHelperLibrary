@@ -34,7 +34,7 @@ namespace NaflimHelperLibrary
             }
             catch (Exception)
             {
-                new Log(strXML).PrintLog("xmlError");
+                new Log("xmlError").SetHead("意外的XML文档").PrintLog(strXML);
                 throw;
             }
         }

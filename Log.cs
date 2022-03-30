@@ -42,10 +42,21 @@ namespace NaflimHelperLibrary
 
         void WriteLog(string log)
         {
-            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
+            try
+            {
+                if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                    Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
 
-            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{FileName}", log);
+                File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{FileName}", log);
+            }
+            catch (IOException)
+            {
+                WriteLog(log);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -185,7 +196,7 @@ namespace NaflimHelperLibrary
             this.log = log;
             LordLog();
             WriteLog(this.log);
-            Console.WriteLine(log);
+            Console.WriteLine(this.log);
         }
 
         /// <summary>
