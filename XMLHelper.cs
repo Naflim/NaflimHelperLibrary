@@ -70,7 +70,9 @@ namespace NaflimHelperLibrary
             {
                 Type t = obj.GetType();
                 XmlSerializer serializer = new XmlSerializer(obj.GetType());
-                serializer.Serialize(sw, obj);
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                serializer.Serialize(sw, obj, ns);
                 sw.Close();
                 return sw.ToString();
             }
@@ -82,15 +84,15 @@ namespace NaflimHelperLibrary
         /// <param name="xml">xml字符串</param>
         /// <param name="nodes">节点列表</param>
         /// <returns></returns>
-        public static string GetElementVal(string xml,string[] nodes)
+        public static string GetElementVal(string xml, string[] nodes)
         {
             StringReader stream = new StringReader(xml);//读取字符串为数据量
             XElement xe1 = XElement.Load(stream);
             string val = null;
 
-            for(int i = 0; i < nodes.Length; i++)
+            for (int i = 0; i < nodes.Length; i++)
             {
-                if(i == nodes.Length -1)
+                if (i == nodes.Length - 1)
                     val = xe1.Element(nodes[i]).Value;
                 else
                 {
