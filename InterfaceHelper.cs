@@ -13,6 +13,48 @@ namespace NaflimHelperLibrary
     public class InterfaceHelper
     {
         /// <summary>
+        /// 拼接get请求字符串
+        /// </summary>
+        /// <param name="baseUrl">根路由</param>
+        /// <param name="param">参数</param>
+        /// <returns>完整路由</returns>
+        public static string GetParameterUrl(string baseUrl, Dictionary<string, string> param)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(baseUrl);
+            if (param.Count > 0)
+            {
+                builder.Append("?");
+                int i = 0;
+                foreach (var item in param)
+                {
+                    if (i > 0)
+                        builder.Append("&");
+                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                    i++;
+                }
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// 请求接口并进行数据处理
+        /// </summary>
+        /// <param name="body">上传数据</param>
+        /// <param name="url">上传地址</param>
+        /// <returns>回调json字符串</returns>
+        public static string GetRequestInterface(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            //获取请求的方式
+            request.Method = "get";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream getStream = response.GetResponseStream();
+            StreamReader streamreader = new StreamReader(getStream);
+            return streamreader.ReadToEnd();
+        }
+
+        /// <summary>
         /// 请求接口并进行数据处理
         /// </summary>
         /// <param name="body">上传数据</param>
@@ -26,7 +68,7 @@ namespace NaflimHelperLibrary
             request.ContentType = "application/json";
             var param = TypeConversion.ObjectToJson(body);
             byte[] bytes = Encoding.UTF8.GetBytes(param);
-            return getReportsContent(request, bytes);
+            return GetReportsContent(request, bytes);
         }
 
         /// <summary>
@@ -46,7 +88,7 @@ namespace NaflimHelperLibrary
                 request.Headers.Add(pair.Key, pair.Value);
             var param = TypeConversion.ObjectToJson(body);
             byte[] bytes = Encoding.UTF8.GetBytes(param);
-            return getReportsContent(request, bytes);
+            return GetReportsContent(request, bytes);
         }
 
         /// <summary>
@@ -55,7 +97,7 @@ namespace NaflimHelperLibrary
         /// <param name="http">http对象</param>
         /// <param name="bytes">body字节</param>
         /// <returns>回应内容</returns>
-        private static string getReportsContent(HttpWebRequest http, byte[] bytes)
+        private static string GetReportsContent(HttpWebRequest http, byte[] bytes)
         {
             http.ContentLength = bytes.Length;
             Stream streamPager = http.GetRequestStream();
@@ -96,5 +138,7 @@ namespace NaflimHelperLibrary
                 res = response.Content.ReadAsStringAsync().Result;
             return res;
         }
+
+       
     }
 }

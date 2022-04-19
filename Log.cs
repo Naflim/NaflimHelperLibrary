@@ -42,10 +42,21 @@ namespace NaflimHelperLibrary
 
         void WriteLog(string log)
         {
-            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
+            try
+            {
+                if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                    Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
 
-            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{FileName}", log);
+                File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/{FileName}", log);
+            }
+            catch (IOException)
+            {
+                WriteLog(log);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -185,7 +196,7 @@ namespace NaflimHelperLibrary
             this.log = log;
             LordLog();
             WriteLog(this.log);
-            Console.WriteLine(log);
+            Console.WriteLine(this.log);
         }
 
         /// <summary>
@@ -193,7 +204,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="input">输入</param>
         /// <param name="output">输出</param>
-        public void PrintLog(string input,string output)
+        public void PrintLog(string input, string output)
         {
             this.input = input;
             this.output = output;
@@ -206,7 +217,7 @@ namespace NaflimHelperLibrary
         /// 模板输出日志
         /// </summary>
         /// <param name="path"></param>
-        public void TemplateLog(string path,string log = "",string input = "",string output = "")
+        public void TemplateLog(string path, string log = "", string input = "", string output = "")
         {
             string temp = File.ReadAllText(path);
             string tempLog = temp;
@@ -226,12 +237,23 @@ namespace NaflimHelperLibrary
         /// <param name="ex">发生的异常</param>
         public static void PrintError(Exception ex)
         {
-            string errorInfo = $"发生异常：{DateTime.Now}{Environment.NewLine}异常信息：{Environment.NewLine}{ex.Message}{Environment.NewLine}详细信息：{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
-            Console.WriteLine(errorInfo);
-            if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
-                Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
+            try
+            {
+                string errorInfo = $"发生异常{ex.GetType()}：{DateTime.Now}{Environment.NewLine}异常信息：{Environment.NewLine}{ex.Message}{Environment.NewLine}详细信息：{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
+                Console.WriteLine(errorInfo);
+                if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}") == false)
+                    Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}");
 
-            File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/error.txt", errorInfo);
+                File.AppendAllText($"{AppDomain.CurrentDomain.BaseDirectory}/log/{DateTime.Now:yyyy-MM-dd}/error.txt", errorInfo);
+            }
+            catch (IOException)
+            {
+                PrintError(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 
