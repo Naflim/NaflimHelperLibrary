@@ -2,6 +2,9 @@
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 正则判断
+    /// </summary>
     public class RegularJudgment
     {
         /// <summary>
@@ -9,8 +12,9 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="value">判断的字符串</param>
         /// <returns></returns>
-        public static bool IsInt(string value)
+        public static bool IsNum(string value)
         {
+            if (string.IsNullOrEmpty(value)) return false;
             return Regex.IsMatch(value, @"^[+-]?\d*$");
         }
 
@@ -21,7 +25,17 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public static bool IsIp(string value)
         {
-            return Regex.IsMatch(value, @"^(([1-9]\d?)|(1\d{2})|(2[01]\d)|(22[0-3]))(\.((1?\d\d?)|(2[04]/d)|(25[0-5]))){3}$");
+            return Regex.IsMatch(value, @"((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))");
+        }
+
+        /// <summary>
+        /// 判断字符串是否为EPC
+        /// </summary>
+        /// <param name="value">判断的字符串</param>
+        /// <returns></returns>
+        public static bool IsEPC(string value)
+        {
+            return value.Length % 4 == 0 && Regex.IsMatch(value, "^[0-9A-Fa-f]+$");
         }
     }
 }

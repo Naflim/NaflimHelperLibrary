@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Nancy.Json;
+using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace NaflimHelperLibrary
 {
+    /// <summary>
+    /// 数据转换
+    /// </summary>
     public class DataConversion
     {
         /// <summary>
@@ -15,9 +19,9 @@ namespace NaflimHelperLibrary
         /// <returns>EPC数组</returns>
         public static string[] GetEPC(byte[] bytes)
         {
-            List<string> strarr = new List<string>();
+            string[] strarr = new string[1000];
             Grouping(strarr, bytes, 0, 0);
-            return strarr.ToArray();
+            return strarr;
         }
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace NaflimHelperLibrary
         /// <param name="byarr">byte数组</param>
         /// <param name="index">当前递归的bype数组索引</param>
         /// <param name="count">当前递归的EPC字符串数组索引</param>
-        public static void Grouping(List<string> strarr, byte[] byarr, int index, int count)
+        public static void Grouping(string[] strarr, byte[] byarr, int index, int count)
         {
             byte[] snaparr = new byte[byarr[index]];
             if (byarr[index] != 0 && snaparr.Length >= byarr[index])
@@ -122,6 +126,37 @@ namespace NaflimHelperLibrary
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// BCC校验
+        /// </summary>
+        /// <param name="data">校验数据</param>
+        /// <param name="temp">输出校验结果</param>
+        public static int BCC(byte[] data)
+        {
+            int temp = 0;
+            for (int index = 0; index < data.Length; index++)
+            {
+                temp ^= data[index];
+            }
+            return temp;
+        }
+
+        /// <summary>
+        /// 字符串转16进制字节数组
+        /// </summary>
+        /// <param name="hexString">数据字符串</param>
+        /// <returns>16进制字节数组</returns>
+        public static byte[] StrToHexByteArr(string hexString)
+        {
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
         }
     }
 }

@@ -2,7 +2,10 @@
 
 namespace NaflimHelperLibrary
 {
-    class TimeHelper
+    /// <summary>
+    /// 时间帮助类
+    /// </summary>
+    public class TimeHelper
     {
         /// <summary>
         /// 获取当前时间戳
