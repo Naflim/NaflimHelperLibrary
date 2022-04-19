@@ -26,7 +26,7 @@ namespace NaflimHelperLibrary
         public string[] GetRegistKeys()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+                throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             var val = software.GetValueNames();
@@ -42,7 +42,7 @@ namespace NaflimHelperLibrary
         public string[] GetRegistData(string[] item)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             string[] registData = new string[item.Length];
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
@@ -60,7 +60,7 @@ namespace NaflimHelperLibrary
         public string GetRegistData(string item)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             string val = software.GetValue(item).ToString();
@@ -75,7 +75,7 @@ namespace NaflimHelperLibrary
         public string[] GetRegistItem()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             string[] registItem = software.GetSubKeyNames();
@@ -90,7 +90,7 @@ namespace NaflimHelperLibrary
         public static string[] GetRegistItem(string url)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey software = hkcu.OpenSubKey(url, true);
             string[] registItem = software.GetSubKeyNames();
@@ -106,7 +106,7 @@ namespace NaflimHelperLibrary
         public static bool IsRegistryKeyExist(string sKeyName, string url)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             string[] sKeyNameColl;
             RegistryKey hkSoftWare = hkcu.OpenSubKey(url);
@@ -131,7 +131,7 @@ namespace NaflimHelperLibrary
         public bool IsRegistryValueNameExist(string sValueName)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             string[] sValueNameColl;
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
@@ -156,7 +156,7 @@ namespace NaflimHelperLibrary
         public bool IsRegistryValueNameExist(string[] sValueName)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             bool flag = false;
             string[] sValueNameColl;
@@ -188,7 +188,7 @@ namespace NaflimHelperLibrary
         public void CreateRegistryKey()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey hkSoftWare = hkcu.CreateSubKey(@"SOFTWARE\NaflimPreject\" + application);
             hkSoftWare.Close();
@@ -201,7 +201,7 @@ namespace NaflimHelperLibrary
         public void SetRegistryValue(Dictionary<string, string> valuePairs)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             foreach (KeyValuePair<string, string> kvp in valuePairs)
@@ -218,7 +218,7 @@ namespace NaflimHelperLibrary
         public void SetRegistryValue(string key, string val)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             hkSoftWare.SetValue(key, val, RegistryValueKind.String);
@@ -233,7 +233,7 @@ namespace NaflimHelperLibrary
         public void DelRegistryValue(string[] valuePairs)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             foreach (string val in valuePairs)
@@ -249,7 +249,7 @@ namespace NaflimHelperLibrary
         public void DelRegistryItem(string itemName)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             hkSoftWare.DeleteSubKey(itemName);
@@ -262,7 +262,7 @@ namespace NaflimHelperLibrary
         public void RegistryClose()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             hkcu.Close();
         }
@@ -276,7 +276,7 @@ namespace NaflimHelperLibrary
         public static void SelfStarting(string exeName, bool flag)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new NotSupportedException("仅支持windows平台使用");
+               throw new PlatformNotSupportedException("仅支持windows平台使用");
 
             string path = System.AppDomain.CurrentDomain.BaseDirectory;
             string keyName = path.Substring(path.LastIndexOf("\\") + 1);
