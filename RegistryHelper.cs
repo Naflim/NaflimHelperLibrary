@@ -17,6 +17,18 @@ namespace NaflimHelperLibrary
         }
 
         /// <summary>
+        /// 注册表获取所有键
+        /// </summary>
+        /// <returns>所有键</returns>
+        public string[] GetRegistKeys()
+        {
+            RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            var val = software.GetValueNames();
+            software.Close();
+            return val;
+        }
+
+        /// <summary>
         /// 注册表获取数据
         /// </summary>
         /// <param name="item">获取的项</param>
@@ -25,10 +37,23 @@ namespace NaflimHelperLibrary
         {
             string[] registData = new string[item.Length];
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
-            for(int i = 0; i < item.Length; i++)
+            for (int i = 0; i < item.Length; i++)
                 registData[i] = software.GetValue(item[i]).ToString();
             software.Close();
             return registData;
+        }
+
+        /// <summary>
+        /// 注册表获取数据
+        /// </summary>
+        /// <param name="item">获取的项</param>
+        /// <returns>注册表数据</returns>
+        public string GetRegistData(string item)
+        {
+            RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            string val = software.GetValue(item).ToString();
+            software.Close();
+            return val;
         }
 
         /// <summary>
@@ -64,7 +89,7 @@ namespace NaflimHelperLibrary
         {
             string[] sKeyNameColl;
             RegistryKey hkSoftWare = hkcu.OpenSubKey(url);
-            sKeyNameColl = hkSoftWare.GetSubKeyNames(); 
+            sKeyNameColl = hkSoftWare.GetSubKeyNames();
             foreach (string sName in sKeyNameColl)
             {
                 if (sName == sKeyName)
@@ -86,7 +111,7 @@ namespace NaflimHelperLibrary
         {
             string[] sValueNameColl;
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
-            sValueNameColl = software.GetValueNames(); 
+            sValueNameColl = software.GetValueNames();
             foreach (string sName in sValueNameColl)
             {
                 if (sName == sValueName)
@@ -109,7 +134,7 @@ namespace NaflimHelperLibrary
             bool flag = false;
             string[] sValueNameColl;
             RegistryKey software = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
-            sValueNameColl = software.GetValueNames(); 
+            sValueNameColl = software.GetValueNames();
             foreach (string name in sValueName)
             {
                 flag = false;
@@ -143,11 +168,37 @@ namespace NaflimHelperLibrary
         /// 设置注册表键值
         /// </summary>
         /// <param name="valuePairs">设置的键值</param>
-        public void SetRegistryValue(Dictionary<string,string> valuePairs)
+        public void SetRegistryValue(Dictionary<string, string> valuePairs)
         {
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
             foreach (KeyValuePair<string, string> kvp in valuePairs)
                 hkSoftWare.SetValue(kvp.Key, kvp.Value, RegistryValueKind.String);
+
+            hkSoftWare.Close();
+        }
+
+        /// <summary>
+        /// 设置注册表键值
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="val">值</param>
+        public void SetRegistryValue(string key, string val)
+        {
+            RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            hkSoftWare.SetValue(key, val, RegistryValueKind.String);
+
+            hkSoftWare.Close();
+        }
+
+        /// <summary>
+        /// 删除注册表键值
+        /// </summary>
+        /// <param name="valuePairs">删除的键</param>
+        public void DelRegistryValue(string[] valuePairs)
+        {
+            RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            foreach (string val in valuePairs)
+                hkSoftWare.DeleteValue(val);
 
             hkSoftWare.Close();
         }
@@ -159,7 +210,7 @@ namespace NaflimHelperLibrary
         public void DelRegistryItem(string itemName)
         {
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
-            hkSoftWare.DeleteSubKey(itemName, true);
+            hkSoftWare.DeleteSubKey(itemName);
             hkSoftWare.Close();
         }
 
@@ -177,7 +228,7 @@ namespace NaflimHelperLibrary
         /// <param name="path">程序路径</param>
         /// <param name="exeName">程序名</param>
         /// <param name="flag">是否自启</param>
-        public static void SelfStarting(string exeName,bool flag)
+        public static void SelfStarting(string exeName, bool flag)
         {
             string path = System.AppDomain.CurrentDomain.BaseDirectory;
             string keyName = path.Substring(path.LastIndexOf("\\") + 1);
