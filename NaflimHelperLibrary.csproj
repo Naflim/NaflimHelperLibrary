@@ -89,6 +89,7 @@
     <Compile Include="DataConversion.cs" />
     <Compile Include="DBhelper.cs" />
     <Compile Include="EncodingConversion.cs" />
+    <Compile Include="ExtensionMethod.cs" />
     <Compile Include="FunctionMethod.cs" />
     <Compile Include="InterfaceHelper.cs" />
     <Compile Include="Log.cs" />
