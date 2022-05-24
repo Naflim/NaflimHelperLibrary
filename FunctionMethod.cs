@@ -12,6 +12,10 @@ namespace NaflimHelperLibrary
     /// </summary>
     public class FunctionMethod
     {
+        /// <summary>
+        /// 播报语音
+        /// </summary>
+        /// <param name="saying">播报语音</param>
         public static void Speaking(string saying)
         {
             string say = saying;
@@ -32,6 +36,10 @@ namespace NaflimHelperLibrary
             });
         }
 
+        /// <summary>
+        /// 获取本机ip
+        /// </summary>
+        /// <returns>本机ip</returns>
         public static string GetIp()
         {
             string hostName = Dns.GetHostName();
