@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,12 +8,12 @@ namespace NaflimHelperLibrary
     /// <summary>
     /// SQLServer帮助类
     /// </summary>
-    public class SQLserHelper
+    public class SQLServerHelper
     {
         //连接数据库
         string conStr;
 
-        public SQLserHelper(string con)
+        public SQLServerHelper(string con)
         {
             conStr = con;
         }
@@ -100,6 +101,59 @@ namespace NaflimHelperLibrary
                 if (connection.State == ConnectionState.Closed)
                     connection.Open();
                 MySqlCommand command = new MySqlCommand(sql, connection);
+                if (parameters != null)
+                    command.Parameters.AddRange(parameters);
+                return command.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Oracle帮助类
+    /// </summary>
+    public class OracleHelpher
+    {
+        //连接数据库
+        string conStr;
+
+        public OracleHelpher(string con)
+        {
+            conStr = con;
+        }
+
+        /// <summary>
+        /// 读取数据库
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">SQL语句参数</param>
+        /// <returns></returns>
+        public DataTable GetData(string sql, params OracleParameter[] parameters)
+        {
+            using (OracleConnection connection = new OracleConnection(conStr))
+            {
+                OracleDataAdapter adapter = new OracleDataAdapter(sql, conStr);
+                if (parameters != null)
+                    adapter.SelectCommand.Parameters.AddRange(parameters);
+                DataTable data = new DataTable();
+                adapter.Fill(data);
+                adapter.Dispose();
+                return data;
+            }
+        }
+
+        /// <summary>
+        /// 对数据库增删改
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">SQL语句条件</param>
+        /// <returns></returns>
+        public bool GetExecuteNonQuery(string sql, params OracleParameter[] parameters)
+        {
+            using (OracleConnection connection = new OracleConnection(conStr))
+            {
+                if (connection.State == ConnectionState.Closed)
+                    connection.Open();
+                OracleCommand command = new OracleCommand(sql, connection);
                 if (parameters != null)
                     command.Parameters.AddRange(parameters);
                 return command.ExecuteNonQuery() > 0;

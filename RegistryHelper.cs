@@ -194,6 +194,18 @@ namespace NaflimHelperLibrary
         /// 删除注册表键值
         /// </summary>
         /// <param name="valuePairs">删除的键</param>
+        public void DelRegistryValue(string valuePairs)
+        {
+            RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);
+            hkSoftWare.DeleteValue(valuePairs);
+
+            hkSoftWare.Close();
+        }
+
+        /// <summary>
+        /// 删除注册表键值
+        /// </summary>
+        /// <param name="valuePairs">删除的键</param>
         public void DelRegistryValue(string[] valuePairs)
         {
             RegistryKey hkSoftWare = hkcu.OpenSubKey(@"SOFTWARE\NaflimPreject\" + application, true);

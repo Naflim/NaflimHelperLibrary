@@ -28,3 +28,4 @@ E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\System.Buffers.xml
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\System.Memory.xml
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\obj\Debug\NaflimHelperLibrary.csproj.AssemblyReference.cache
+E:\NaflimProject\C#\NaflimHelperLibrary\4.5.2\bin\Debug\Oracle.ManagedDataAccess.dll
