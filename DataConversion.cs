@@ -50,7 +50,7 @@ namespace NaflimHelperLibrary
         /// </summary>
         /// <param name="bytes">字符数组</param>
         /// <returns></returns>
-        private static string ByteToHexStr(byte[] bytes)
+        public static string ByteToHexStr(byte[] bytes)
         {
             string returnStr = null;
             if (bytes != null)
@@ -61,6 +61,23 @@ namespace NaflimHelperLibrary
                 }
             }
             return returnStr;
+        }
+
+        /// <summary>
+        /// 字符串转16进制字节数组
+        /// </summary>
+        /// <param name="hexString">数据字符串</param>
+        /// <returns>16进制字节数组</returns>
+        public static byte[] StrToHexByteArr(string hexString)
+        {
+            if (!RegularJudgment.IsHex(hexString)) throw new ArgumentException("非16进制字符串！");
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
         }
 
         /// <summary>
@@ -107,13 +124,13 @@ namespace NaflimHelperLibrary
         /// <param name="json">json字符串</param>
         /// <param name="item">项名</param>
         /// <returns>项值</returns>
-        public static string GetJsonItem(string json,string[] item)
+        public static string GetJsonItem(string json, string[] item)
         {
 
             JavaScriptSerializer Jss = new JavaScriptSerializer();
             Dictionary<string, object> DicText = (Dictionary<string, object>)Jss.DeserializeObject(json);
 
-            foreach(string keyName in item)
+            foreach (string keyName in item)
             {
                 if (!DicText.ContainsKey(keyName))
                     return null;
@@ -142,21 +159,6 @@ namespace NaflimHelperLibrary
             }
             return temp;
         }
-
-        /// <summary>
-        /// 字符串转16进制字节数组
-        /// </summary>
-        /// <param name="hexString">数据字符串</param>
-        /// <returns>16进制字节数组</returns>
-        public static byte[] StrToHexByteArr(string hexString)
-        {
-            hexString = hexString.Replace(" ", "");
-            if ((hexString.Length % 2) != 0)
-                hexString += " ";
-            byte[] returnBytes = new byte[hexString.Length / 2];
-            for (int i = 0; i < returnBytes.Length; i++)
-                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-            return returnBytes;
-        }
+        
     }
 }

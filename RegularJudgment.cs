@@ -35,7 +35,17 @@ namespace NaflimHelperLibrary
         /// <returns></returns>
         public static bool IsEPC(string value)
         {
-            return value.Length % 4 == 0 && Regex.IsMatch(value, "^[0-9A-Fa-f]+$");
+            return value.Length % 4 == 0 && IsHex(value);
+        }
+
+        /// <summary>
+        /// 判断字符串是否为16进制字符串
+        /// </summary>
+        /// <param name="value">判断的字符串</param>
+        /// <returns></returns>
+        public static bool IsHex(string value)
+        {
+            return Regex.IsMatch(value, "^[0-9A-Fa-f]+$");
         }
     }
 }
