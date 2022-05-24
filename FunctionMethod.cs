@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,6 +30,14 @@ namespace NaflimHelperLibrary
 
                 speech.Speak(say);
             });
+        }
+
+        public static string GetIp()
+        {
+            string hostName = Dns.GetHostName();
+            IPHostEntry iPHostEntry = Dns.GetHostEntry(hostName);
+            var addressV = iPHostEntry.AddressList.FirstOrDefault(q => q.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);//ip4地址
+            return addressV.ToString();
         }
     }
 }
